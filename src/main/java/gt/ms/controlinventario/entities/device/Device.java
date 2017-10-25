@@ -6,19 +6,13 @@
 package gt.ms.controlinventario.entities.device;
 
 import gt.ms.controlinventario.base.FullyAuditedEntity;
-import java.util.List;
 import java.util.Objects;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.envers.Audited;
 
 /**
@@ -41,6 +35,10 @@ public class Device extends FullyAuditedEntity{
     @JoinColumn()
     private DeviceStatus deviceStatus;
     
+    @ManyToOne()
+    @JoinColumn()
+    private DeviceGroup deviceGroups;
+    
 //    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
 //    @JoinTable("inventory")
 //    @Fetch(FetchMode.SUBSELECT)
@@ -54,18 +52,18 @@ public class Device extends FullyAuditedEntity{
     
     @Column(length = 255)
     private String previousLocation;
-    
-    @Column(length = 255)
-    private String observation;
 
-    public Device(String code, String name, DeviceStatus deviceStatus, String brand, String serialNumber, String previousLocation, String observation) {
+    public Device() {
+    }
+
+    public Device(String code, String name, DeviceStatus deviceStatus, DeviceGroup deviceGroups, String brand, String serialNumber, String previousLocation) {
         this.code = code;
         this.name = name;
         this.deviceStatus = deviceStatus;
+        this.deviceGroups = deviceGroups;
         this.brand = brand;
         this.serialNumber = serialNumber;
         this.previousLocation = previousLocation;
-        this.observation = observation;
     }
 
     public String getCode() {
@@ -92,6 +90,14 @@ public class Device extends FullyAuditedEntity{
         this.deviceStatus = deviceStatus;
     }
 
+    public DeviceGroup getDeviceGroups() {
+        return deviceGroups;
+    }
+
+    public void setDeviceGroups(DeviceGroup deviceGroups) {
+        this.deviceGroups = deviceGroups;
+    }
+
     public String getBrand() {
         return brand;
     }
@@ -116,24 +122,16 @@ public class Device extends FullyAuditedEntity{
         this.previousLocation = previousLocation;
     }
 
-    public String getObservation() {
-        return observation;
-    }
-
-    public void setObservation(String observation) {
-        this.observation = observation;
-    }
-
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.code);
-        hash = 97 * hash + Objects.hashCode(this.name);
-        hash = 97 * hash + Objects.hashCode(this.deviceStatus);
-        hash = 97 * hash + Objects.hashCode(this.brand);
-        hash = 97 * hash + Objects.hashCode(this.serialNumber);
-        hash = 97 * hash + Objects.hashCode(this.previousLocation);
-        hash = 97 * hash + Objects.hashCode(this.observation);
+        hash = 41 * hash + Objects.hashCode(this.code);
+        hash = 41 * hash + Objects.hashCode(this.name);
+        hash = 41 * hash + Objects.hashCode(this.deviceStatus);
+        hash = 41 * hash + Objects.hashCode(this.deviceGroups);
+        hash = 41 * hash + Objects.hashCode(this.brand);
+        hash = 41 * hash + Objects.hashCode(this.serialNumber);
+        hash = 41 * hash + Objects.hashCode(this.previousLocation);
         return hash;
     }
 
@@ -164,10 +162,10 @@ public class Device extends FullyAuditedEntity{
         if (!Objects.equals(this.previousLocation, other.previousLocation)) {
             return false;
         }
-        if (!Objects.equals(this.observation, other.observation)) {
+        if (!Objects.equals(this.deviceStatus, other.deviceStatus)) {
             return false;
         }
-        if (!Objects.equals(this.deviceStatus, other.deviceStatus)) {
+        if (!Objects.equals(this.deviceGroups, other.deviceGroups)) {
             return false;
         }
         return true;
@@ -175,7 +173,8 @@ public class Device extends FullyAuditedEntity{
 
     @Override
     public String toString() {
-        return "Device{" + "code=" + code + ", name=" + name + ", deviceStatus=" + deviceStatus + ", brand=" + brand + ", serialNumber=" + serialNumber + ", previousLocation=" + previousLocation + ", observation=" + observation + '}';
+        return "Device{" + "code=" + code + ", name=" + name + ", deviceStatus=" + deviceStatus + ", deviceGroups=" + deviceGroups + ", brand=" + brand + ", serialNumber=" + serialNumber + ", previousLocation=" + previousLocation + '}';
     }
+    
     
 }

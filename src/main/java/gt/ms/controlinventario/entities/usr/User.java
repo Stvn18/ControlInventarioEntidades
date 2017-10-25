@@ -7,6 +7,7 @@ package gt.ms.controlinventario.entities.usr;
 
 import gt.ms.controlinventario.base.FullyAuditedEntity;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -34,6 +35,10 @@ public class User extends FullyAuditedEntity {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(schema = "usr")
     private Set<UserRol> roles = new HashSet<>();
+    
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(schema = "usr")
+    private Set<UserInventory> inventories = new HashSet<>();
 
     public User() {
     }
@@ -76,10 +81,60 @@ public class User extends FullyAuditedEntity {
         this.roles = roles;
     }
 
+    public Set<UserInventory> getInventories() {
+        return inventories;
+    }
+
+    public void setInventories(Set<UserInventory> inventories) {
+        this.inventories = inventories;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 47 * hash + Objects.hashCode(this.account);
+        hash = 47 * hash + Objects.hashCode(this.password);
+        hash = 47 * hash + Objects.hashCode(this.namePerson);
+        hash = 47 * hash + Objects.hashCode(this.roles);
+        hash = 47 * hash + Objects.hashCode(this.inventories);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final User other = (User) obj;
+        if (!Objects.equals(this.account, other.account)) {
+            return false;
+        }
+        if (!Objects.equals(this.password, other.password)) {
+            return false;
+        }
+        if (!Objects.equals(this.namePerson, other.namePerson)) {
+            return false;
+        }
+        if (!Objects.equals(this.roles, other.roles)) {
+            return false;
+        }
+        if (!Objects.equals(this.inventories, other.inventories)) {
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public String toString() {
-        return "User{" + "account=" + account + ", password=" + password + ", namePerson=" + namePerson + ", roles=" + roles + '}';
+        return "User{" + "account=" + account + ", password=" + password + ", namePerson=" + namePerson + ", roles=" + roles + ", inventories=" + inventories + '}';
     }
+
     
     public static User create(String account, String password, String namePerson){
         if(account == null || namePerson == null){
